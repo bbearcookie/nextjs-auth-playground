@@ -14,8 +14,6 @@ export const authAPI = {
       params: params.query,
     });
 
-    console.log(res);
-
     return res;
   },
 } as const;
