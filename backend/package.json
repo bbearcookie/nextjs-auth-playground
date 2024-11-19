@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "build": "tsc",
+    "start": "node -r module-alias/register dist/app.js",
+    "dev": "nodemon --watch src --exec ts-node -r tsconfig-paths/register src/app.ts"
+  },
+  "_moduleAliases": {
+    "@": "dist"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "module-alias": "^2.2.3"
+  }
+}
