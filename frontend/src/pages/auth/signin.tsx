@@ -1,15 +1,12 @@
-import { authAPI } from '@/apis/auth';
 import React from 'react';
+import { next_authAPI } from '../api/auth/signin';
 
 const SignInPage = () => {
   const handleLogin = async () => {
-    const res = await authAPI.signIn({
+    const res = await next_authAPI.postSignIn({
       data: {
-        email: 'hello@naver.com',
+        email: 'bear@naver.com',
         password: '1234',
-      },
-      query: {
-        code: 'hello my querystring',
       },
     });
 

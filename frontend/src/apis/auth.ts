@@ -1,11 +1,11 @@
-import { apiInstance } from '@/pages/lib/api-instance';
+import { serviceAPI } from '@/pages/lib/service-api';
 
 export const authAPI = {
-  signIn: async (params: {
+  postSignIn: async (params: {
     data: { email: string; password: string };
-    query: { code: string };
+    query?: { code: string };
   }) => {
-    const res = await apiInstance<{
+    const res = await serviceAPI<{
       accessToken: string;
     }>({
       url: '/auth/signin',
@@ -14,6 +14,6 @@ export const authAPI = {
       params: params.query,
     });
 
-    return res;
+    return res.data;
   },
 } as const;

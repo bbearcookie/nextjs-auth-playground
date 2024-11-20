@@ -1,8 +1,11 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 let browserAccessToken: string | null = null;
 
-export const apiInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
+/** 서비스의 백엔드 서버와 통신하기 위한 클라이언트 */
+export const serviceAPI = <T>(
+  config: AxiosRequestConfig
+): Promise<AxiosResponse<T>> => {
   // TODO: 서버, 클라이언트 환경에 따라 액세스 토큰 가져오기
   const accessToken =
     typeof window === 'undefined' ? undefined : browserAccessToken;
