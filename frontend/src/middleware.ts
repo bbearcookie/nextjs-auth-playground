@@ -9,6 +9,8 @@ export async function middleware(req: NextRequest) {
 
   const session = await getIronSession<SessionType>(req, res, sessionOptions);
 
+  console.log('session in middleware', session);
+
   if (req.nextUrl.pathname.startsWith('/shop') && !session['accessToken']) {
     return NextResponse.redirect(new URL('/auth/signin', req.url));
   }

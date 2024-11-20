@@ -15,15 +15,7 @@ export default async function handler(
   if (req.method === 'POST') {
     const session = await getIronSession<SessionType>(req, res, sessionOptions);
 
-    const result = await authAPI.postSignIn({
-      data: {
-        email: req.body.email,
-        password: req.body.password,
-      },
-    });
-
-    session.accessToken = result.accessToken;
-    await session.save();
+    session.destroy();
   }
 
   res.status(200).json({ message: 'Hello from Next.js!' });

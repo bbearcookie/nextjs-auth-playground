@@ -1,7 +1,10 @@
+import { next_authAPI } from '@/apis/next/next_auth';
+import { useRouter } from 'next/router';
 import React from 'react';
-import { next_authAPI } from '../api/auth/signin';
 
 const SignInPage = () => {
+  const router = useRouter();
+
   const handleLogin = async () => {
     const res = await next_authAPI.postSignIn({
       data: {
@@ -10,7 +13,7 @@ const SignInPage = () => {
       },
     });
 
-    console.log(res);
+    router.replace('/shop');
   };
 
   return (
