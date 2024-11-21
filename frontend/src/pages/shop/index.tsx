@@ -1,4 +1,4 @@
-import { next_authAPI } from '@/apis/next/next_auth';
+import { nextServerAuthAPI } from '@/apis/next/auth/apis';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -6,7 +6,7 @@ const ShopPage = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await next_authAPI.postSignOut();
+    await nextServerAuthAPI.postSignOut();
     router.replace('/auth/signin');
   };
 

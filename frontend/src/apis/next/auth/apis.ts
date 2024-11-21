@@ -1,8 +1,8 @@
-import { nextAPI } from '@/pages/lib/next-api';
+import { nextServerAPI } from '@/pages/lib/nextServerAPI';
 
-export const next_authAPI = {
+export const nextServerAuthAPI = {
   postSignIn: async (params: { data: { email: string; password: string } }) => {
-    const res = await nextAPI({
+    const res = await nextServerAPI({
       url: '/api/auth/signin',
       method: 'post',
       data: params.data,
@@ -11,7 +11,7 @@ export const next_authAPI = {
     return res;
   },
   postSignOut: async () => {
-    const res = await nextAPI({
+    const res = await nextServerAPI({
       url: '/api/auth/signout',
       method: 'post',
     });

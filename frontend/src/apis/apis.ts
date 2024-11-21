@@ -1,4 +1,4 @@
-import { serviceAPI } from '@/pages/lib/service-api';
+import { serviceAPI } from '@/pages/lib/serviceAPI';
 
 export const authAPI = {
   postSignIn: async (params: {

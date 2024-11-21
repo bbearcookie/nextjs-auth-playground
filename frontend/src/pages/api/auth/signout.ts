@@ -1,4 +1,4 @@
-import { authAPI } from '@/apis/auth';
+import { authAPI } from '@/apis/apis';
 import { sessionOptions } from '@/config/session-options';
 import { SessionType } from '@/types/session';
 import { getIronSession } from 'iron-session';

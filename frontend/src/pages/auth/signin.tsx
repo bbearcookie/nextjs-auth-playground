@@ -1,4 +1,4 @@
-import { next_authAPI } from '@/apis/next/next_auth';
+import { nextServerAuthAPI } from '@/apis/next/auth/apis';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -6,7 +6,7 @@ const SignInPage = () => {
   const router = useRouter();
 
   const handleLogin = async () => {
-    const res = await next_authAPI.postSignIn({
+    const res = await nextServerAuthAPI.postSignIn({
       data: {
         email: 'bear@naver.com',
         password: '1234',
