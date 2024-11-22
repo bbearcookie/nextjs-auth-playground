@@ -7,13 +7,12 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import { Suspense, useState } from 'react';
-import '@/styles/globals.css';
 import { browserSession } from '../lib/serviceAPI';
-import { SessionProvider } from '../lib/sessionContext';
+import '@/styles/globals.css';
 
 export default function App({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps: { session, dehydratedState, ...pageProps },
 }: AppProps) {
   const accessToken = session?.accessToken;
 
@@ -37,13 +36,11 @@ export default function App({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={pageProps.dehydratedState}>
-        <SessionProvider accessToken={accessToken}>
-          <Suspense fallback={<div>로딩중</div>}>
-            <Component {...pageProps} />
-            <ReactQueryDevtools initialIsOpen />
-          </Suspense>
-        </SessionProvider>
+      <HydrationBoundary state={dehydratedState}>
+        <Suspense fallback={<div>로딩중</div>}>
+          <Component {...pageProps} />
+          <ReactQueryDevtools initialIsOpen />
+        </Suspense>
       </HydrationBoundary>
     </QueryClientProvider>
   );

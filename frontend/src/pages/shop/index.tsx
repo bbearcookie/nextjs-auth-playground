@@ -3,7 +3,6 @@ import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { serviceAPI } from '../../lib/serviceAPI';
-import { useSessionContext } from '../../lib/sessionContext';
 import { withSessionContext } from '../../hocs/withSessionContext';
 
 const ShopPage = ({
@@ -16,8 +15,6 @@ const ShopPage = ({
     await nextServerAuthAPI.postSignOut();
     router.replace('/auth/signin');
   };
-
-  const { accessToken } = useSessionContext();
 
   return (
     <div>

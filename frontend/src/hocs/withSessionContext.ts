@@ -4,9 +4,7 @@ import { getIronSession } from 'iron-session';
 import { GetServerSidePropsContext } from 'next';
 import { asyncLocalStorage } from '../lib/sessionContext';
 
-/**
- * 세션 정보를 컨텍스트에 주입하는 HOC
- */
+/** 세션 정보를 컨텍스트에 주입하는 HOC */
 export function withSessionContext<T>(
   handler: (context: GetServerSidePropsContext) => Promise<T>
 ) {
@@ -17,19 +15,16 @@ export function withSessionContext<T>(
       sessionOptions
     );
 
-    return asyncLocalStorage?.run(
-      { accessToken: session.accessToken },
-      async () => {
-        const result = (await handler(context)) as { props: T };
+    return asyncLocalStorage?.run(session, async () => {
+      const result = (await handler(context)) as { props: T };
 
-        return {
-          ...result,
-          props: {
-            ...result.props,
-            session,
-          },
-        } as T;
-      }
-    );
+      return {
+        ...result,
+        props: {
+          ...result.props,
+          session,
+        },
+      } as T;
+    });
   };
 }
