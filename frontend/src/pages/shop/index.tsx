@@ -1,7 +1,5 @@
 import { nextServerAuthAPI } from '@/apis/next/auth/apis';
-import { sessionOptions } from '@/config/sessionOptions';
-import { getIronSession } from 'iron-session';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { serviceAPI } from '../../lib/serviceAPI';
@@ -57,10 +55,6 @@ const ShopPage = ({
 export default ShopPage;
 
 export const getServerSideProps = withSessionContext(async (context) => {
-  const session = await getIronSession<{
-    accessToken: string;
-  }>(context.req, context.res, sessionOptions);
-
   const result = await serviceAPI<string>({
     url: '/',
     method: 'GET',
@@ -69,7 +63,6 @@ export const getServerSideProps = withSessionContext(async (context) => {
   return {
     props: {
       message: result.data,
-      session,
     },
   };
 });
