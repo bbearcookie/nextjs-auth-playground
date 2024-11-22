@@ -1,3 +1,3 @@
-export type SessionType = {
+export type SessionType = Partial<{
   accessToken: string;
-};
+}>;

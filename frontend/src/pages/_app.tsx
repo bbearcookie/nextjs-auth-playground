@@ -1,5 +1,5 @@
 import { SessionProvider } from '@/providers/SessionProvider';
-import '@/styles/globals.css';
+import { isServer } from '@/utils/isServer';
 import {
   HydrationBoundary,
   QueryClient,
@@ -8,6 +8,8 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import { Suspense, useState } from 'react';
+import '@/styles/globals.css';
+import { browserSession } from './lib/serviceAPI';
 
 export default function App({
   Component,
@@ -26,7 +28,12 @@ export default function App({
       })
   );
 
-  console.log('session', session);
+  if (isServer()) {
+    console.log('서버입니다 session', session);
+  } else {
+    browserSession.accessToken = accessToken;
+    console.log('클라이언트입니다 session', session);
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
