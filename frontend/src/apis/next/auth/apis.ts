@@ -1,4 +1,4 @@
-import { nextServerAPI } from '@/pages/lib/nextServerAPI';
+import { nextServerAPI } from '@/lib/nextServerAPI';
 
 export const nextServerAuthAPI = {
   /** 로그인 */

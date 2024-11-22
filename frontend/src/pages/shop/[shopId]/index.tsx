@@ -1,5 +1,5 @@
 import { sessionOptions } from '@/config/sessionOptions';
-import { useSessionContext } from '@/providers/SessionProvider';
+import { useSessionContext } from '@/lib/sessionContext';
 import { getIronSession } from 'iron-session';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';

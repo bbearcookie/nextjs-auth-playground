@@ -1,4 +1,3 @@
-import { SessionProvider } from '@/providers/SessionProvider';
 import { isServer } from '@/utils/isServer';
 import {
   HydrationBoundary,
@@ -9,7 +8,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import { Suspense, useState } from 'react';
 import '@/styles/globals.css';
-import { browserSession } from './lib/serviceAPI';
+import { browserSession } from '../lib/serviceAPI';
+import { SessionProvider } from '../lib/sessionContext';
 
 export default function App({
   Component,

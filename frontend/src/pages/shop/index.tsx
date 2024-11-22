@@ -1,18 +1,12 @@
 import { nextServerAuthAPI } from '@/apis/next/auth/apis';
 import { sessionOptions } from '@/config/sessionOptions';
-import { useSessionContext } from '@/providers/SessionProvider';
 import { getIronSession } from 'iron-session';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { serviceAPI } from '../lib/serviceAPI';
-import { asyncLocalStorage } from '../lib/asyncLocalStorage';
-import { isServer } from '@/utils/isServer';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { serviceAPI } from '../../lib/serviceAPI';
+import { useSessionContext } from '../../lib/sessionContext';
+import { withSessionContext } from '../../hocs/withSessionContext';
 
 const ShopPage = ({
   message,
@@ -26,11 +20,6 @@ const ShopPage = ({
   };
 
   const { accessToken } = useSessionContext();
-
-  useSuspenseQuery({
-    queryKey: ['server-test'],
-    queryFn: () => serviceAPI({ url: '/' }),
-  });
 
   return (
     <div>
@@ -67,41 +56,20 @@ const ShopPage = ({
 
 export default ShopPage;
 
-export function withSessionContext(
-  handler: (context: GetServerSidePropsContext) => Promise<any>
-) {
-  return async (context: GetServerSidePropsContext) => {
-    const session = await getIronSession<{
-      accessToken: string;
-    }>(context.req, context.res, sessionOptions);
-
-    if (isServer()) {
-      return asyncLocalStorage?.run(
-        { accessToken: session.accessToken },
-        () => {
-          console.log(
-            'asyncLocalStorage 열었어요!',
-            asyncLocalStorage?.getStore()
-          );
-          return handler(context);
-        }
-      );
-    }
-
-    return handler(context);
-  };
-}
-
 export const getServerSideProps = withSessionContext(async (context) => {
   const session = await getIronSession<{
     accessToken: string;
   }>(context.req, context.res, sessionOptions);
-  console.log('session in getServerSideProps', session);
+
+  const result = await serviceAPI<string>({
+    url: '/',
+    method: 'GET',
+  });
 
   return {
     props: {
-      message: 'hello',
+      message: result.data,
       session,
     },
   };
-}) satisfies GetServerSideProps<{ message: string }>;
+});
