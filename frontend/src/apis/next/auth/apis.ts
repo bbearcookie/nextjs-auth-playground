@@ -31,8 +31,6 @@ export const nextServerAuthAPI = {
       url: '/api/auth/token',
     });
 
-    console.log('res.data', res.data);
-
     return res.data;
   },
 } as const;

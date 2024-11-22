@@ -1,5 +1,5 @@
 import { authAPI } from '@/apis/apis';
-import { sessionOptions } from '@/config/session-options';
+import { sessionOptions } from '@/config/sessionOptions';
 import { SessionType } from '@/types/session';
 import { getIronSession } from 'iron-session';
 import type { NextApiRequest, NextApiResponse } from 'next';

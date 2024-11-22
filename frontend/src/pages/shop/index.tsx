@@ -1,7 +1,6 @@
 import { nextServerAuthAPI } from '@/apis/next/auth/apis';
-import { sessionOptions } from '@/config/session-options';
-import { useSession } from '@/hooks/useSession';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { sessionOptions } from '@/config/sessionOptions';
+import { useSessionContext } from '@/providers/SessionProvider';
 import { getIronSession } from 'iron-session';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
@@ -17,21 +16,14 @@ const ShopPage = ({
     router.replace('/auth/signin');
   };
 
-  const { data } = useSession();
-  console.log('useSession Data', data);
-
-  const handleToken = async () => {
-    const res = await nextServerAuthAPI.getToken();
-
-    console.log('cliked token', res.accessToken);
-  };
+  const { accessToken } = useSessionContext();
+  console.log('accessToken in ShopPage', accessToken);
 
   return (
     <div>
       {message}
       <h1>로그인 된 사용자만 들어올 수 있는 상점 페이지</h1>
       <button onClick={handleLogout}>로그아웃</button>
-      <button onClick={handleToken}>토큰 get</button>
     </div>
   );
 };
@@ -44,14 +36,10 @@ export const getServerSideProps = (async (context) => {
   }>(context.req, context.res, sessionOptions);
   console.log('session in getServerSideProps', session);
 
-  const queryClient = new QueryClient();
-
-  await queryClient.fetchQuery({
-    queryKey: ['session'],
-    queryFn: () => nextServerAuthAPI.getToken(),
-  });
-
   return {
-    props: { message: 'hello', dehydratedState: dehydrate(queryClient) },
+    props: {
+      message: 'hello',
+      session: session,
+    },
   };
 }) satisfies GetServerSideProps<{ message: string }>;
