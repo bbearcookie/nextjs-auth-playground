@@ -1,9 +1,9 @@
-import { nextServerAuthAPI } from '@/apis/next/auth/apis';
+import { nextServerAuthAPI } from '@/pages/api/auth/_apis';
 import { InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { serviceAPI } from '../../lib/serviceAPI';
-import { withSessionContext } from '../../hocs/withSessionContext';
+import { withSessionSSR } from '@/hocs/withSession';
 
 const ShopPage = ({
   message,
@@ -11,16 +11,29 @@ const ShopPage = ({
   const router = useRouter();
   const [count, setCount] = useState(0);
 
-  const handleLogout = async () => {
+  const logout = async () => {
     await nextServerAuthAPI.postSignOut();
     router.replace('/auth/signin');
+  };
+
+  const healthCheck = async () => {
+    serviceAPI({
+      url: '/',
+      method: 'GET',
+    });
+  };
+
+  const getToken = async () => {
+    const result = await nextServerAuthAPI.getToken();
+    console.log(result);
   };
 
   return (
     <div>
       {message}
       <h1>로그인 된 사용자만 들어올 수 있는 상점 페이지</h1>
-      <button onClick={handleLogout}>로그아웃</button>
+      <button onClick={logout}>로그아웃</button>
+      <br />
 
       <h2>카운트: {count}</h2>
       <div>
@@ -28,22 +41,20 @@ const ShopPage = ({
           카운트 증가
         </button>
       </div>
+      <br />
 
       <div>
         <button onClick={() => router.push(`/shop/${count}`)}>화면 이동</button>
       </div>
+      <br />
 
       <div>
-        <button
-          onClick={() =>
-            serviceAPI({
-              url: '/',
-              method: 'GET',
-            })
-          }
-        >
-          API Call 해보기
-        </button>
+        <button onClick={healthCheck}>백엔드 서버로 API Call</button>
+      </div>
+      <br />
+
+      <div>
+        <button onClick={getToken}>토큰 Check and Refresh 해보기</button>
       </div>
     </div>
   );
@@ -51,7 +62,7 @@ const ShopPage = ({
 
 export default ShopPage;
 
-export const getServerSideProps = withSessionContext(async (context) => {
+export const getServerSideProps = withSessionSSR(async () => {
   const result = await serviceAPI<string>({
     url: '/',
     method: 'GET',

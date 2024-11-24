@@ -11,9 +11,9 @@ export const serviceAPI = <T>(
     : browserSession.accessToken;
 
   if (isServer()) {
-    console.log('서버에서 API Call 합니다: ', accessToken);
+    console.log('[serviceAPI] 서버에서 API Call', accessToken);
   } else {
-    console.log('브라우저에서 API Call 합니다: ', accessToken);
+    console.log('[serviceAPI] 브라우저에서 API Call', accessToken);
   }
 
   const api = axios.create({

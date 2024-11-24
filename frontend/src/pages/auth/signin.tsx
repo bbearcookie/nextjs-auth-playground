@@ -1,6 +1,6 @@
-import { nextServerAuthAPI } from '@/apis/next/auth/apis';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { nextServerAuthAPI } from '@/pages/api/auth/_apis';
 
 const SignInPage = () => {
   const router = useRouter();

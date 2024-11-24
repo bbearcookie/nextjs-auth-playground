@@ -15,6 +15,7 @@ export default function App({
   pageProps: { session, dehydratedState, ...pageProps },
 }: AppProps) {
   const accessToken = session?.accessToken;
+  const refreshToken = session?.refreshToken;
 
   const [queryClient] = useState(
     () =>
@@ -27,11 +28,15 @@ export default function App({
       })
   );
 
-  if (isServer()) {
-    console.log('서버입니다 session', session);
-  } else {
+  if (!isServer()) {
     browserSession.accessToken = accessToken;
-    console.log('클라이언트입니다 session', session);
+    browserSession.refreshToken = refreshToken;
+  }
+
+  if (isServer()) {
+    console.log('[_app.tsx] 서버 환경의 session', session);
+  } else {
+    console.log('[_app.tsx] 브라우저 환경의 session', session);
   }
 
   return (

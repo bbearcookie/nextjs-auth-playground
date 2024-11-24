@@ -22,11 +22,9 @@ export const nextServerAuthAPI = {
     return res.data;
   },
 
-  /** iron-session 토큰으로 세션 정보 가져오기 */
+  /** 토큰 갱신 */
   getToken: async () => {
-    const res = await nextServerAPI<{
-      accessToken: string;
-    }>({
+    const res = await nextServerAPI({
       method: 'get',
       url: '/api/auth/token',
     });
