@@ -7,6 +7,8 @@ import type { NextApiResponse } from 'next';
 
 type ResponseData = {
   message: string;
+  accessToken?: string;
+  refreshToken?: string;
 };
 
 export default withSessionHandler(
@@ -32,7 +34,11 @@ export default withSessionHandler(
 
       res
         .status(200)
-        .json({ message: '로그인 성공! 세션에 토큰을 보관했습니다.' });
+        .json({
+          message: '로그인 성공! 세션에 토큰을 보관했습니다.',
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        });
     }
   }
 );

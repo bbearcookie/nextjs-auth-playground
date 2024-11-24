@@ -7,6 +7,8 @@ import { NextApiResponse } from 'next';
 
 type ResponseData = {
   message: string;
+  accessToken?: string;
+  refreshToken?: string;
 };
 
 export default withSessionHandler(
@@ -19,7 +21,8 @@ export default withSessionHandler(
       );
 
       if (!session.refreshToken) {
-        return res.status(401).json({ message: '로그인이 필요합니다.' });
+        res.status(401).json({ message: '로그인이 필요합니다.' });
+        return;
       }
 
       const result = await authAPI.getToken({
@@ -34,7 +37,9 @@ export default withSessionHandler(
       await session.save();
 
       res.status(200).json({
-        message: `토큰 갱신 성공! --- accessToken: ${result.accessToken} --- refreshToken: ${result.refreshToken}`,
+        message: `토큰 갱신 성공!`,
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
       });
     }
   }

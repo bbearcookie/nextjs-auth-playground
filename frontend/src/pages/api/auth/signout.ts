@@ -1,9 +1,8 @@
-import { authAPI } from '@/apis/apis';
 import { sessionOptions } from '@/config/sessionOptions';
 import { withSessionHandler } from '@/hocs/withSession';
 import { SessionType } from '@/types/session';
 import { getIronSession } from 'iron-session';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 
 type ResponseData = {
   message: string;

@@ -14,18 +14,24 @@ class BrowserSession {
   private static accessToken: string | undefined;
   private static refreshToken: string | undefined;
 
-  static set(accessToken: string, refreshToken: string) {
-    if (isServer()) return;
-    BrowserSession.accessToken = accessToken;
-    BrowserSession.refreshToken = refreshToken;
-  }
-
   static get() {
     if (isServer()) return;
     return {
       accessToken: BrowserSession.accessToken,
       refreshToken: BrowserSession.refreshToken,
     };
+  }
+
+  static set(accessToken: string, refreshToken: string) {
+    if (isServer()) return;
+    BrowserSession.accessToken = accessToken;
+    BrowserSession.refreshToken = refreshToken;
+  }
+
+  static clear() {
+    if (isServer()) return;
+    BrowserSession.accessToken = undefined;
+    BrowserSession.refreshToken = undefined;
   }
 }
 
