@@ -7,7 +7,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import { Suspense, useState } from 'react';
-import { browserSession } from '../lib/serviceAPI';
+import { BrowserSession } from '@/lib/session';
 import '@/styles/globals.css';
 
 export default function App({
@@ -29,8 +29,7 @@ export default function App({
   );
 
   if (!isServer()) {
-    browserSession.accessToken = accessToken;
-    browserSession.refreshToken = refreshToken;
+    BrowserSession.set(accessToken, refreshToken);
   }
 
   if (isServer()) {

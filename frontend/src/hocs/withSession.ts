@@ -2,7 +2,7 @@ import { sessionOptions } from '@/config/sessionOptions';
 import { SessionType } from '@/types/session';
 import { getIronSession } from 'iron-session';
 import { GetServerSidePropsContext, NextApiHandler } from 'next';
-import { asyncLocalStorage } from '../lib/sessionContext';
+import { ServerSession } from '../lib/session';
 
 /** 세션 정보를 getServerSideProps의 컨텍스트에 주입하는 HOC */
 export function withSessionSSR<T>(
@@ -15,7 +15,7 @@ export function withSessionSSR<T>(
       sessionOptions
     );
 
-    return asyncLocalStorage?.run(session, async () => {
+    return ServerSession?.run(session, async () => {
       const result = (await handler(context)) as { props: T };
 
       return {
@@ -34,7 +34,7 @@ export function withSessionHandler(handler: NextApiHandler): NextApiHandler {
   return async (req, res) => {
     const session = await getIronSession<SessionType>(req, res, sessionOptions);
 
-    return asyncLocalStorage?.run(session, async () => {
+    return ServerSession?.run(session, async () => {
       return handler(req, res);
     });
   };
