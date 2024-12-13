@@ -1,4 +1,5 @@
-import { serviceAPI } from '@/lib/serviceAPI';
+import { BASE_URL, serviceAPI } from '@/lib/serviceAPI';
+import axios from 'axios';
 
 type AuthTokenResponse = {
   accessToken: string;
@@ -11,7 +12,8 @@ export const authAPI = {
     data: { email: string; password: string };
     query?: { code: string };
   }) => {
-    const res = await serviceAPI<AuthTokenResponse>({
+    const res = await axios<AuthTokenResponse>({
+      baseURL: BASE_URL,
       method: 'post',
       url: '/auth/signin',
       data: params.data,
@@ -23,7 +25,8 @@ export const authAPI = {
 
   /** 토큰 갱신 */
   getToken: async (params: { query: { refreshToken: string } }) => {
-    const res = await serviceAPI<AuthTokenResponse>({
+    const res = await axios<AuthTokenResponse>({
+      baseURL: BASE_URL,
       method: 'get',
       url: '/auth/token',
       params: params.query,

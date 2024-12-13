@@ -20,12 +20,12 @@ export function withSessionSSR<T>(
     const refreshToken = session.refreshToken;
 
     try {
-      if (accessToken && isTokenExpired(accessToken)) {
-        if (!refreshToken) {
-          throw new Error('리프레쉬 토큰이 없습니다.');
-        }
+      if (!accessToken || !refreshToken) {
+        throw new Error('인가 토큰이 없습니다.');
+      }
 
-        if (refreshToken && isTokenExpired(refreshToken)) {
+      if (isTokenExpired(accessToken)) {
+        if (isTokenExpired(refreshToken)) {
           throw new Error('리프레쉬 토큰이 만료되었습니다.');
         }
 

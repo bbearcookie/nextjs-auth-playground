@@ -21,11 +21,19 @@ AuthController.post('/signin', async (req, res) => {
 AuthController.get('/token', async (req, res) => {
   const { refreshToken } = req.query;
 
-  const token = await AuthService.validateAndRefreshToken(
-    refreshToken as string
-  );
+  try {
+    const token = AuthService.validateAndRefreshToken(refreshToken as string);
 
-  res.status(200).json(token);
+    res.status(200).json(token);
+    return;
+  } catch (err) {
+    res.status(401).json({
+      message: '리프레쉬 토큰 만료',
+      statusCode: 401,
+      errorCode: 5555,
+    });
+    return;
+  }
 });
 
 AuthController.get('/myinfo', async (req, res) => {
@@ -41,13 +49,13 @@ AuthController.get('/myinfo', async (req, res) => {
     res.status(200).json(myInfo);
     return;
   } catch (err) {
-    console.error(err);
-
     if (err instanceof Error) {
       if (err.message === '토큰 만료') {
-        res
-          .status(401)
-          .json({ message: err.message, statusCode: 401, errorCode: 4444 });
+        res.status(401).json({
+          message: '액세스 토큰 만료',
+          statusCode: 401,
+          errorCode: 4444,
+        });
         return;
       }
     }

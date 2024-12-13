@@ -32,13 +32,11 @@ export default withSessionHandler(
 
       await session.save();
 
-      res
-        .status(200)
-        .json({
-          message: '로그인 성공! 세션에 토큰을 보관했습니다.',
-          accessToken: result.accessToken,
-          refreshToken: result.refreshToken,
-        });
+      res.status(200).json({
+        message: '로그인 성공! 세션에 토큰을 보관했습니다.',
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      });
     }
   }
 );

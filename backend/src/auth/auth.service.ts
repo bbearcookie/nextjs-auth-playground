@@ -11,19 +11,19 @@ export class AuthService {
     if (signinDTO.email !== 'bear@naver.com' || signinDTO.password !== '1234')
       throw new Error('계정 인증 실패');
 
-    const authToken = await this.generateAuthToken({
+    const authToken = this.generateAuthToken({
       email: signinDTO.email,
     });
 
     return authToken;
   }
 
-  static async validateAndRefreshToken(refreshToken: string) {
+  static validateAndRefreshToken(refreshToken: string) {
     try {
       const decoded = jwt.verify(refreshToken, JWT_SECRET) as jwt.JwtPayload &
         AuthTokenPayload;
 
-      const authToken = await this.generateAuthToken({
+      const authToken = this.generateAuthToken({
         email: decoded.email,
       });
 
@@ -41,9 +41,9 @@ export class AuthService {
     }
   }
 
-  static async generateAuthToken(payload: AuthTokenPayload) {
+  static generateAuthToken(payload: AuthTokenPayload) {
     const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '3s' });
-    const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+    const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '10s' });
 
     return {
       accessToken,
