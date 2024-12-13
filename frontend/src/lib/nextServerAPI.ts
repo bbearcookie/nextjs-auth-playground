@@ -8,13 +8,5 @@ export const nextServerAPI = <T>(
     baseURL: 'http://localhost:3000',
   });
 
-  api.interceptors.request.use((config) => {
-    return config;
-  });
-
-  api.interceptors.response.use((config) => {
-    return config;
-  });
-
   return api(config);
 };

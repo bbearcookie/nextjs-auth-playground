@@ -4,12 +4,23 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { serviceAPI } from '../../lib/serviceAPI';
 import { withSessionSSR } from '@/hocs/withSession';
+import { authAPI } from '@/apis/apis';
+import {
+  dehydrate,
+  QueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 const ShopPage = ({
   message,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const [count, setCount] = useState(0);
+
+  const { data: myInfo } = useSuspenseQuery({
+    queryKey: ['my-info'],
+    queryFn: authAPI.getMyInfo,
+  });
 
   const logout = async () => {
     await nextServerAuthAPI.postSignOut();
@@ -28,10 +39,16 @@ const ShopPage = ({
     console.log(result);
   };
 
+  const getMyInfo = async () => {
+    const result = await authAPI.getMyInfo();
+    console.log(result);
+  };
+
   return (
     <div>
       {message}
       <h1>로그인 된 사용자만 들어올 수 있는 상점 페이지</h1>
+
       <button onClick={logout}>로그아웃</button>
       <br />
 
@@ -56,6 +73,11 @@ const ShopPage = ({
       <div>
         <button onClick={getToken}>토큰 Check and Refresh 해보기</button>
       </div>
+
+      <div>
+        <button onClick={() => getMyInfo()}>내 정보 조회</button>
+        <p>{JSON.stringify(myInfo)}</p>
+      </div>
     </div>
   );
 };
@@ -63,6 +85,13 @@ const ShopPage = ({
 export default ShopPage;
 
 export const getServerSideProps = withSessionSSR(async () => {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['my-info'],
+    queryFn: authAPI.getMyInfo,
+  });
+
   const result = await serviceAPI<string>({
     url: '/',
     method: 'GET',
@@ -71,6 +100,7 @@ export const getServerSideProps = withSessionSSR(async () => {
   return {
     props: {
       message: result.data,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 });

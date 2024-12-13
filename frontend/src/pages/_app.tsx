@@ -32,12 +32,6 @@ export default function App({
     BrowserSession.set(accessToken, refreshToken);
   }
 
-  if (isServer()) {
-    console.log('[_app.tsx] 서버 환경의 session', session);
-  } else {
-    console.log('[_app.tsx] 브라우저 환경의 session', session);
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydratedState}>

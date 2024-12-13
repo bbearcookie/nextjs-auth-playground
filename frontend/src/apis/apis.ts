@@ -12,8 +12,8 @@ export const authAPI = {
     query?: { code: string };
   }) => {
     const res = await serviceAPI<AuthTokenResponse>({
-      url: '/auth/signin',
       method: 'post',
+      url: '/auth/signin',
       data: params.data,
       params: params.query,
     });
@@ -24,9 +24,22 @@ export const authAPI = {
   /** 토큰 갱신 */
   getToken: async (params: { query: { refreshToken: string } }) => {
     const res = await serviceAPI<AuthTokenResponse>({
-      url: '/auth/token',
       method: 'get',
+      url: '/auth/token',
       params: params.query,
+    });
+
+    return res.data;
+  },
+
+  /** 내 정보 조회 */
+  getMyInfo: async () => {
+    const res = await serviceAPI<{
+      email: string;
+      name: string;
+    }>({
+      method: 'get',
+      url: '/auth/myinfo',
     });
 
     return res.data;

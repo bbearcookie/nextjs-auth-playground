@@ -42,12 +42,34 @@ export class AuthService {
   }
 
   static async generateAuthToken(payload: AuthTokenPayload) {
-    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '30s' });
+    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '3s' });
     const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
     return {
       accessToken,
       refreshToken,
+    };
+  }
+
+  static async getMyInfo(accessToken: string) {
+    try {
+      jwt.verify(accessToken, JWT_SECRET);
+    } catch (err) {
+      console.error(err);
+      if (err instanceof jwt.TokenExpiredError) {
+        throw new Error('토큰 만료');
+      } else if (err instanceof jwt.JsonWebTokenError) {
+        throw new Error('토큰 변조');
+      } else if (err instanceof jwt.NotBeforeError) {
+        throw new Error('토큰 활성화 시간 이전');
+      } else if (err instanceof Error) {
+        throw new Error('알 수 없는 에러');
+      }
+    }
+
+    return {
+      email: 'bear@naver.com',
+      name: '곰돌이',
     };
   }
 }
