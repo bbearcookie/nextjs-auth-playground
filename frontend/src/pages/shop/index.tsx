@@ -44,6 +44,14 @@ const ShopPage = ({
     console.log(result);
   };
 
+  const getMultipleMyInfo = async () => {
+    const result = await Promise.all([
+      authAPI.getMyInfo(),
+      authAPI.getMyInfo(),
+      authAPI.getMyInfo(),
+    ]);
+  };
+
   return (
     <div>
       {message}
@@ -77,6 +85,10 @@ const ShopPage = ({
       <div>
         <button onClick={() => getMyInfo()}>내 정보 조회</button>
         <p>{JSON.stringify(myInfo)}</p>
+      </div>
+
+      <div>
+        <button onClick={() => getMultipleMyInfo()}>내 정보 다중 조회</button>
       </div>
     </div>
   );

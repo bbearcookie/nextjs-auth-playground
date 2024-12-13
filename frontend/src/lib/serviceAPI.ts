@@ -2,6 +2,7 @@ import { isServer } from '@/utils/isServer';
 import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from 'axios';
 import { ServerSession, BrowserSession } from './session';
 import { nextServerAuthAPI } from '@/pages/api/auth/_apis';
+import { RetryQueue } from './retryQueue';
 
 export const BASE_URL = 'http://localhost:5010';
 
@@ -32,17 +33,36 @@ export const serviceAPI = <T>(
     (response) => response,
     async (error) => {
       if (!isServer() && isAxiosError(error)) {
-        console.log(error.response?.data);
-
+        // 토큰 만료 시 토큰 재발급 후 요청 재시도
         if (`${error?.response?.data?.errorCode}` === '4444') {
-          try {
-            console.log('토큰 재발급');
-            await nextServerAuthAPI.getToken();
-            return serviceAPI(config);
-          } catch (err) {
-            console.log('토큰 재발급 실패');
-            await nextServerAuthAPI.postSignOut();
-            window.location.href = '/auth/signin';
+          if (RetryQueue.isRefreshing === true) {
+            return new Promise((resolve, reject) => {
+              RetryQueue.add({
+                config,
+                resolve,
+                reject,
+              });
+            });
+          } else if (RetryQueue.isRefreshing === false) {
+            RetryQueue.isRefreshing = true;
+
+            try {
+              await nextServerAuthAPI.getToken();
+
+              while (!RetryQueue.isEmpty()) {
+                const item = RetryQueue.shift();
+                if (!item) break;
+                serviceAPI(item.config).then(item.resolve).catch(item.reject);
+              }
+
+              return serviceAPI(config);
+            } catch (err) {
+              RetryQueue.reset();
+              await nextServerAuthAPI.postSignOut();
+              window.location.href = '/auth/signin';
+            } finally {
+              RetryQueue.isRefreshing = false;
+            }
           }
         }
       }
